@@ -17,6 +17,7 @@ sensor=26
 pwm=0
 
 while :
+do
     lux=`/usr/bin/curl -s http://192.168.1.9/LUX`
     human=`/usr/bin/gpio read $sensor`
     /usr/bin/gpio pwm $led $pwm
@@ -51,3 +52,4 @@ while :
         /usr/bin/gpio write $filterB 1
         pwm=0
     fi
+done
