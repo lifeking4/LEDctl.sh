@@ -22,7 +22,7 @@ do
     human=`/usr/bin/gpio read $sensor`
     /usr/bin/gpio pwm $led $pwm
     
-    if [ LUX -lt 20 ];then
+    if [ $lux -lt 20 ];then
         /usr/bin/gpio write $irled 1
         /usr/bin/gpio write $filterA 1
         /usr/bin/gpio write $filterB 0
@@ -34,14 +34,18 @@ do
         fi
 
         if [ $human -eq 1 ];then
+            detect_time=`/bin/date +%s`
             if [ $pwm -lt 1000 ];then
-                pwm=`expr $pwm + 10`
+                pwm=`expr $pwm + 20`
             else
                 pwm=1000
             fi
         else
+            now=`/bin/date +%s`
             if [ $pwm -gt 30 ];then
-                pwm=`expr $pwm - 10`
+                if [ $now -gt `expr $detect_time + 180` ];then
+                    pwm=`expr $pwm - 20`
+                fi
             else
                 pwm=30
             fi
